@@ -1,6 +1,7 @@
 import React from 'react';
 import { PEDAGOGICAL_PILLARS } from '../data/contentData';
 import { UserCheck, BookMarked, Award, CalendarCheck, CheckCircle2, Sparkles, BookOpen } from 'lucide-react';
+import teacherHelpImg from '../assets/images/borja_teacher_help_1785379383755.jpg';
 
 export const PedagogicalPillars: React.FC = () => {
   const getPillarIcon = (iconName: string) => {
@@ -99,7 +100,7 @@ export const PedagogicalPillars: React.FC = () => {
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-[#F5B718] transform rotate-1 hover:rotate-0 transition-transform max-w-sm">
                 <img
-                  src="/src/assets/images/borja_teacher_help_1785379383755.jpg"
+                  src={teacherHelpImg}
                   alt="Acompanhamento Pedagógico Borja Castillo"
                   className="w-full h-56 sm:h-64 object-cover"
                   referrerPolicy="no-referrer"

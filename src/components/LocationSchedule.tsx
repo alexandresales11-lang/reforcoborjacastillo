@@ -1,6 +1,7 @@
 import React from 'react';
 import { SCHOOL_INFO } from '../data/contentData';
 import { MapPin, Clock, Calendar, Phone, MessageSquare, Navigation, CheckCircle } from 'lucide-react';
+import learningKidsImg from '../assets/images/borja_learning_kids_1785379368047.jpg';
 
 export const LocationSchedule: React.FC = () => {
   return (
@@ -74,7 +75,7 @@ export const LocationSchedule: React.FC = () => {
             <div className="bg-white p-4 rounded-3xl shadow-xl border-4 border-[#F5B718] relative overflow-hidden">
               <div className="rounded-2xl overflow-hidden h-72 sm:h-80 relative bg-slate-100">
                 <img
-                  src="/src/assets/images/borja_learning_kids_1785379368047.jpg"
+                  src={learningKidsImg}
                   alt="Unidade Reforço Borja Castillo em Jacobina BA"
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"

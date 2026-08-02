@@ -105,13 +105,19 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLeadModal, onOpenAdminModa
               </p>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 flex items-center gap-3">
               <button
                 onClick={onOpenLeadModal}
-                className="w-full py-3 bg-[#F5B718] hover:bg-[#E2A610] text-[#1B1145] font-black rounded-xl text-xs uppercase tracking-wider shadow-md transition-all"
+                className="flex-1 py-3 bg-[#F5B718] hover:bg-[#E2A610] text-[#1B1145] font-black rounded-xl text-xs uppercase tracking-wider shadow-md transition-all text-center"
               >
                 Agendar Aula Experimental
               </button>
+              <img
+                src="https://i.imgur.com/0nYfUqP.png"
+                alt="Borja Castillo Logo"
+                className="h-12 w-auto object-contain flex-shrink-0 bg-white/10 p-1 rounded-xl border border-amber-400/30"
+                referrerPolicy="no-referrer"
+              />
             </div>
           </div>
 
