@@ -1,0 +1,6 @@
+{
+  "name": "Reforço Escolar Borja Castillo",
+  "description": "Site profissional de alta conversão para o Reforço Escolar Borja Castillo em Jacobina-BA, com foco em captação de leads, depoimentos e diferenciais pedagógicos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
