@@ -1,9 +1,54 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { SCHOOL_INFO } from '../data/contentData';
-import { MapPin, Clock, Calendar, Phone, MessageSquare, Navigation, CheckCircle } from 'lucide-react';
-import learningKidsImg from '../assets/images/borja_learning_kids_1785379368047.jpg';
+import { MapPin, Clock, Calendar, MessageSquare, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const CAROUSEL_IMAGES = [
+  'https://i.imgur.com/rCEFbeB.jpeg',
+  'https://i.imgur.com/kfPaNXs.jpeg',
+  'https://i.imgur.com/oKVcNR6.jpeg',
+  'https://i.imgur.com/4cNwcR2.jpeg',
+  'https://i.imgur.com/L6vgEpi.jpeg',
+  'https://i.imgur.com/BLrjM4u.png',
+  'https://i.imgur.com/ozcYUEa.png',
+];
 
 export const LocationSchedule: React.FC = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev === 0 ? CAROUSEL_IMAGES.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev === CAROUSEL_IMAGES.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > 40;
+    const isRightSwipe = distance < -40;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    } else if (isRightSwipe) {
+      prevSlide();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
   return (
     <section id="localizacao" className="py-16 sm:py-20 bg-slate-50 border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -70,36 +115,91 @@ export const LocationSchedule: React.FC = () => {
             </div>
           </div>
 
-          {/* Map & Image Visual */}
+          {/* Carousel & Image Visual */}
           <div className="lg:col-span-6">
             <div className="bg-white p-4 rounded-3xl shadow-xl border-4 border-[#F5B718] relative overflow-hidden">
-              <div className="rounded-2xl overflow-hidden h-72 sm:h-80 relative bg-slate-100">
-                <img
-                  src={learningKidsImg}
-                  alt="Unidade Reforço Borja Castillo em Jacobina BA"
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1B1145]/90 via-[#1B1145]/30 to-transparent flex flex-col justify-end p-6 text-white">
-                  <span className="text-amber-400 font-extrabold text-xs uppercase tracking-wider">
-                    Reforço Escolar Borja Castillo
-                  </span>
-                  <h3 className="text-xl font-black text-white">
-                    Jacobina - Bahia
-                  </h3>
-                  <p className="text-xs text-slate-200 font-medium mt-1">
-                    Ambiente climatizado, silencioso, organizado e altamente motivador.
-                  </p>
+              <div 
+                className="rounded-2xl overflow-hidden h-72 sm:h-96 relative bg-slate-900 group select-none cursor-grab active:cursor-grabbing"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+              >
+                {/* Images slide container */}
+                <div 
+                  className="w-full h-full flex transition-transform duration-500 ease-out"
+                  style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                >
+                  {CAROUSEL_IMAGES.map((imgUrl, index) => (
+                    <div key={index} className="w-full h-full flex-shrink-0 relative">
+                      <img
+                        src={imgUrl}
+                        alt={`Ambiente Reforço Borja Castillo - Foto ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Gradient overlay on bottom */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#1B1145]/90 via-[#1B1145]/40 to-transparent p-4 sm:p-6 text-white pointer-events-none flex flex-col justify-end">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-amber-400 font-extrabold text-xs uppercase tracking-wider">
+                        Reforço Escolar Borja Castillo
+                      </span>
+                      <h3 className="text-lg sm:text-xl font-black text-white">
+                        Jacobina - Bahia
+                      </h3>
+                    </div>
+                    <span className="bg-[#1B1145]/80 backdrop-blur-md text-amber-300 border border-amber-400/40 px-2.5 py-1 rounded-full text-xs font-bold">
+                      {currentIndex + 1} / {CAROUSEL_IMAGES.length}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Left Arrow */}
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 bg-[#1B1145]/80 hover:bg-[#1B1145] text-amber-300 p-2.5 rounded-full shadow-lg border border-amber-400/50 transition-all opacity-90 hover:scale-110 active:scale-95"
+                  aria-label="Imagem anterior"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                {/* Right Arrow */}
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#1B1145]/80 hover:bg-[#1B1145] text-amber-300 p-2.5 rounded-full shadow-lg border border-amber-400/50 transition-all opacity-90 hover:scale-110 active:scale-95"
+                  aria-label="Próxima imagem"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+
+                {/* Carousel Indicators / Dots */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+                  {CAROUSEL_IMAGES.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentIndex(index)}
+                      className={`h-2 rounded-full transition-all ${
+                        currentIndex === index 
+                          ? 'w-6 bg-[#F5B718]' 
+                          : 'w-2 bg-white/60 hover:bg-white'
+                      }`}
+                      aria-label={`Ir para foto ${index + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
 
               <div className="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between text-xs font-bold text-[#1B1145]">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle className="w-4 h-4 text-emerald-600" />
+                  <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span>Matrículas Abertas para o Mês Vigente</span>
                 </span>
-                <span className="text-amber-800 bg-amber-200/80 px-2.5 py-0.5 rounded-full">
-                  Jacobina BA
+                <span className="text-amber-800 bg-amber-200/80 px-2.5 py-0.5 rounded-full text-[11px]">
+                  Arraste para o lado 👉
                 </span>
               </div>
             </div>
@@ -111,3 +211,4 @@ export const LocationSchedule: React.FC = () => {
     </section>
   );
 };
+
